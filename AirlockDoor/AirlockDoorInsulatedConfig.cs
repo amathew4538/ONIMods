@@ -25,36 +25,34 @@ using Object = UnityEngine.Object;
 namespace PeterHan.AirlockDoor {
 	/// <summary>
 	/// An airlock door that requires power, but allows Duplicants to pass without ever
-	/// transmitting liquid or gas (unless set to Open).
+	/// transmitting liquid or gas (unless set to Open). This version is a much better
+	/// temperature insulator than the default Airlock Door, but requires late game technology.
 	/// </summary>
-	public sealed class AirlockDoorConfig : IBuildingConfig {
-		public const string ID = "PAirlockDoor";
-
-		internal static float ENERGY_CAPACITY = 10000.0f;
-		internal static float ENERGY_PER_USE = 3000.0f;
+	public sealed class AirlockDoorInsulatedConfig : IBuildingConfig {
+		public const string ID = "PAirlockDoorInsulated";
 
 		/// <summary>
 		/// The completed building template.
 		/// </summary>
-		internal static PBuilding AirlockDoorTemplate;
+		internal static PBuilding AirlockDoorInsulatedTemplate;
 
 		/// <summary>
 		/// Creates this building.
 		/// </summary>
 		/// <returns>The building prototype.</returns>
 		internal static PBuilding CreateBuilding() {
-			return AirlockDoorTemplate = new PBuilding(ID, AirlockDoorStrings.BUILDINGS.
-					PREFABS.PAIRLOCKDOOR.NAME) {
-				AddAfter = PressureDoorConfig.ID,
-				Animation = "airlock_door_kanim",
+			return AirlockDoorInsulatedTemplate = new PBuilding(ID, AirlockDoorStrings.BUILDINGS.
+					PREFABS.PAIRLOCKDOORINSULATED.NAME) {
+				AddAfter = InsulatedDoorConfig.ID,
+				Animation = "airlock_door_insulated_kanim",
 				Category = "Base",
-				ConstructionTime = 60.0f,
-				Decor = TUNING.BUILDINGS.DECOR.PENALTY.TIER1,
+				ConstructionTime = 90.0f,
+				Decor = TUNING.BUILDINGS.DECOR.PENALTY.TIER2,
 				Description = null, EffectText = null,
 				Entombs = false,
 				Floods = false,
 				Height = 2,
-				HP = 30,
+				HP = 40,
 				LogicIO = {
 					LogicPorts.Port.InputPort(AirlockDoor.OPEN_CLOSE_PORT_ID, CellOffset.none,
 						AirlockDoorStrings.BUILDINGS.PREFABS.PAIRLOCKDOOR.LOGIC_OPEN,
@@ -62,7 +60,8 @@ namespace PeterHan.AirlockDoor {
 						AirlockDoorStrings.BUILDINGS.PREFABS.PAIRLOCKDOOR.LOGIC_OPEN_INACTIVE)
 				},
 				Ingredients = {
-					new BuildIngredient(TUNING.MATERIALS.REFINED_METAL, tier: 4),
+					new BuildIngredient(TUNING.MATERIALS.INSULATOR, tier: 4),
+					new BuildIngredient(TUNING.MATERIALS.REFINED_METAL, tier: 2),
 				},
 				// Overheating is not possible on solid tile buildings because they bypass
 				// structure temperatures so sim will never send the overheat notification
@@ -71,46 +70,44 @@ namespace PeterHan.AirlockDoor {
 				RotateMode = PermittedRotations.Unrotatable,
 				SceneLayer = Grid.SceneLayer.InteriorWall,
 				SubCategory = "doors",
-				Tech = "ImprovedGasPiping",
+				Tech = "Catalytics",
 				Width = 3
 			};
 		}
 
 		public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag) {
 			base.ConfigureBuildingTemplate(go, prefab_tag);
-			AirlockDoorTemplate?.ConfigureBuildingTemplate(go);
+			AirlockDoorInsulatedTemplate?.ConfigureBuildingTemplate(go);
 		}
 
 		public override BuildingDef CreateBuildingDef() {
-			LocString.CreateLocStringKeys(typeof(AirlockDoorStrings.BUILDING));
-			LocString.CreateLocStringKeys(typeof(AirlockDoorStrings.BUILDINGS));
-			if (AirlockDoorTemplate == null)
-				throw new ArgumentNullException(nameof(AirlockDoorTemplate));
-			var def = AirlockDoorTemplate.CreateDef();
+			if (AirlockDoorInsulatedTemplate == null)
+				throw new ArgumentNullException(nameof(AirlockDoorInsulatedTemplate));
+			var def = AirlockDoorInsulatedTemplate.CreateDef();
 			def.ForegroundLayer = Grid.SceneLayer.TileMain;
 			def.IsFoundation = true;
 			def.PreventIdleTraversalPastBuilding = true;
-			// /5 multiplier to thermal conductivity
-			def.ThermalConductivity = 0.2f;
+			// /50 multiplier to thermal conductivity
+			def.ThermalConductivity = 0.02f;
 			def.TileLayer = PGameUtils.GetObjectLayer(nameof(ObjectLayer.FoundationTile),
 				ObjectLayer.FoundationTile);
 			return def;
 		}
 
 		public override void DoPostConfigureUnderConstruction(GameObject go) {
-			AirlockDoorTemplate?.CreateLogicPorts(go);
+			AirlockDoorInsulatedTemplate?.CreateLogicPorts(go);
 		}
 
 		public override void DoPostConfigurePreview(BuildingDef def, GameObject go) {
-			AirlockDoorTemplate?.CreateLogicPorts(go);
+			AirlockDoorInsulatedTemplate?.CreateLogicPorts(go);
 		}
 
 		public override void DoPostConfigureComplete(GameObject go) {
-			AirlockDoorTemplate?.DoPostConfigureComplete(go);
-			AirlockDoorTemplate?.CreateLogicPorts(go);
+			AirlockDoorInsulatedTemplate?.DoPostConfigureComplete(go);
+			AirlockDoorInsulatedTemplate?.CreateLogicPorts(go);
 			var ad = go.AddOrGet<AirlockDoor>();
-			ad.EnergyCapacity = ENERGY_CAPACITY;
-			ad.EnergyPerUse = ENERGY_PER_USE;
+			ad.EnergyCapacity = AirlockDoorConfig.ENERGY_CAPACITY;
+			ad.EnergyPerUse = AirlockDoorConfig.ENERGY_PER_USE;
 			var occupier = go.AddOrGet<SimCellOccupier>();
 			occupier.doReplaceElement = true;
 			occupier.notifyOnMelt = true;

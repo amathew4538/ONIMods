@@ -64,6 +64,24 @@ namespace PeterHan.AirlockDoor {
 					public static LocString LOGIC_OPEN_INACTIVE = STRINGS.UI.FormatAsAutomationState(
 						"Red Signal", STRINGS.UI.AutomationState.Standby) + ": Lock door";
 				}
+
+				public static class PAIRLOCKDOORINSULATED {
+					public static LocString NAME = STRINGS.UI.FormatAsLink("Insulated Airlock Door", AirlockDoorInsulatedConfig.ID);
+					public static LocString DESC = string.Concat("Sucking Duplicants that have nowhere to go into space through ",
+						STRINGS.UI.FormatAsLink("Insulated Doors", InsulatedDoorConfig.ID),
+						" is poor taste. Insulated Airlock Doors now allow Duplicants safe passage without the loss of any of their mysterious fluids.");
+					public static LocString EFFECT = string.Concat("Blocks ",
+						STRINGS.UI.FormatAsLink("Liquid", "ELEMENTS_LIQUID"),
+						" and ",
+						STRINGS.UI.FormatAsLink("Gas", "ELEMENTS_GAS"),
+						" flow, even while Duplicants are passing.\n\nWill not allow passage when no ",
+						STRINGS.UI.FormatAsLink("Power", "POWER"),
+						" is available.\n\n",
+						STRINGS.UI.FormatAsLink("Critters", "CRITTERS"),
+						" can never pass through this door.\n\n",
+						STRINGS.UI.FormatAsLink("Heat", "HEAT"),
+						" flow through this door is greatly reduced.");
+				}
 			}
 		}
 	}

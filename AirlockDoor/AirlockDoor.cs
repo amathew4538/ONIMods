@@ -17,10 +17,7 @@
  */
 
 using KSerialization;
-using PeterHan.PLib.Core;
-using PeterHan.PLib.Detours;
 using System;
-using System.Reflection;
 using UnityEngine;
 
 namespace PeterHan.AirlockDoor {
@@ -371,10 +368,10 @@ namespace PeterHan.AirlockDoor {
 		/// <param name="enable">true to add a fake floor, or false to remove it.</param>
 		private void SetFakeFloor(bool enable) {
 			// Place fake floor along the top
-			int width = building.Def.WidthInCells, start = Grid.PosToCell(this), height =
+			int width = building.Def.WidthInCells, start = building.GetCell(), height =
 				building.Def.HeightInCells;
 			for (int i = 0; i < width; i++) {
-				int target = Grid.OffsetCell(start, i, height);
+				int target = Grid.OffsetCell(start, i - 1, height - 1);
 				if (Grid.IsValidCell(target)) {
 					if (enable)
 						Grid.FakeFloor.Add(target);
@@ -437,10 +434,10 @@ namespace PeterHan.AirlockDoor {
 				Game.Instance.SetDupePassableSolid(centerUpCell, !locked && usable, false);
 			// Left side cells controlled by left open
 			UpdateWorldState(Grid.CellLeft(baseCell), usable || unplugged, openLeft);
-			UpdateWorldState(Grid.CellUpLeft(baseCell), usable || unplugged, openLeft);
+			UpdateWorldState(Grid.CellUpLeft(baseCell), usable || unplugged, true);
 			// Right side cells controlled by right open
 			UpdateWorldState(Grid.CellRight(baseCell), usable || unplugged, openRight);
-			UpdateWorldState(Grid.CellUpRight(baseCell), usable || unplugged, openRight);
+			UpdateWorldState(Grid.CellUpRight(baseCell), usable || unplugged, true);
 			var inst = Pathfinding.Instance;
 			foreach (var cell in building.PlacementCells)
 				inst.AddDirtyNavGridCell(cell);

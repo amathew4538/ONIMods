@@ -60,6 +60,26 @@ namespace PeterHan.ModUpdateDate {
 				inst.UpdateText();
 		}
 
+		/// <summary>
+		/// Waits until all pending downloads are completed.
+		/// </summary>
+		private void EarlyModUpdate() {
+			if (!SafeMode) {
+				var inst = SteamUGCServiceFixed.Instance;
+				inst.Initialize();
+				try {
+					do {
+						inst.Process();
+						SteamAPI.RunCallbacks();
+						System.Threading.Thread.Sleep(30);
+					} while (inst.UpdateInProgress);
+				} catch (Exception e) {
+					PUtil.LogWarning("Pre-menu update failed. Continuing load:");
+					PUtil.LogExcWarn(e);
+				}
+			}
+		}
+
 		public override void OnLoad(Harmony harmony) {
 			try {
 				var method = typeof(Mod).GetMethodSafe(nameof(Mod.SetCrashed), false);
@@ -75,9 +95,14 @@ namespace PeterHan.ModUpdateDate {
 				base.OnLoad(harmony);
 				ThisMod = mod;
 				// Shut off AVC
+				var settings = ModUpdateInfo.Settings;
 				PRegistry.PutData("PLib.VersionCheck.ModUpdaterActive", true);
-				if (ModUpdateInfo.Settings?.AutoUpdate == true)
+				if (settings != null && settings.AutoUpdate) {
 					PRegistry.PutData("PLib.VersionCheck.PassiveSteamUpdate", true);
+					// If early update requested, manually pump the event thread
+					if (settings.EarlyUpdate)
+						EarlyModUpdate();
+				}
 			} catch (Exception e) {
 				// AAAAAAAAH!
 				PUtil.LogWarning("Mod Updater failed to load! Entering safe mode...");

@@ -60,6 +60,12 @@ namespace PeterHan.ModUpdateDate {
 				// Passive mode
 				public static LocString OPTION_PASSIVE = "Auto-Update";
 
+				// Enable in Mod Safe Mode
+				public static LocString OPTION_SAFEMODEFIX = "Enable in Mod Safe Mode";
+				
+				// Update mods before loading them
+				public static LocString OPTION_EARLYUPDATE = "Delay Load for Updates";
+
 				// Steam update date
 				public static LocString STEAM_UPDATE = "<b>Steam Updated:</b> {0:f}";
 
@@ -99,8 +105,11 @@ namespace PeterHan.ModUpdateDate {
 
 			public static class TOOLTIPS {
 				public static class MODUPDATER {
-					public static LocString OPTION_MAINMENU = "If selected, a warning with the number of potentially\noutdated mods is shown in the main menu.";
+					public static LocString OPTION_EARLYUPDATE = "Attempt to update mods before they are loaded.";
+					public static LocString OPTION_MAINMENU = "Show the number of potentially outdated mods in the main menu.";
 					public static LocString OPTION_PASSIVE = "Automatically keeps all mods up to date in the background\nby downloading the correct version in the first place.";
+					public static LocString OPTION_SAFEMODEFIX = "Leave Mod Updater enabled if mods fail to load to prevent unexpected mod version downgrades.\n\n" +
+						"This option works best if Mod Updater is near the <b>top</b> of the mod list.";
 				}
 			}
 		}

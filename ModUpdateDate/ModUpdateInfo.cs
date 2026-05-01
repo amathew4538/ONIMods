@@ -108,6 +108,14 @@ namespace PeterHan.ModUpdateDate {
 		[JsonProperty]
 		[Option("STRINGS.UI.MODUPDATER.OPTION_PASSIVE", "STRINGS.UI.TOOLTIPS.MODUPDATER.OPTION_PASSIVE")]
 		public bool AutoUpdate { get; set; }
+		
+		[JsonProperty]
+		[Option("STRINGS.UI.MODUPDATER.OPTION_EARLYUPDATE", "STRINGS.UI.TOOLTIPS.MODUPDATER.OPTION_EARLYUPDATE")]
+		public bool EarlyUpdate { get; set; }
+
+		[JsonProperty]
+		[Option("STRINGS.UI.MODUPDATER.OPTION_SAFEMODEFIX", "STRINGS.UI.TOOLTIPS.MODUPDATER.OPTION_SAFEMODEFIX")]
+		public bool EnableInSafeMode { get; set; }
 
 		[JsonProperty]
 		[Option("STRINGS.UI.MODUPDATER.OPTION_MAINMENU", "STRINGS.UI.TOOLTIPS.MODUPDATER.OPTION_MAINMENU")]
@@ -119,6 +127,8 @@ namespace PeterHan.ModUpdateDate {
 		public ModUpdateInfo() {
 			ModUpdates = new List<ModUpdateData>(8);
 			AutoUpdate = true;
+			EarlyUpdate = false;
+			EnableInSafeMode = false;
 			ShowMainMenuWarning = true;
 			VersionSavedOn = "";
 		}

@@ -55,12 +55,14 @@ namespace PeterHan.AirlockDoor {
 		}
 
 		public override void OnLoad(Harmony harmony) {
+			var bm = new PBuildingManager();
 			base.OnLoad(harmony);
 			BUILDING_LAYER = (int)PGameUtils.GetObjectLayer(nameof(ObjectLayer.Building),
 				ObjectLayer.Building);
 			PUtil.InitLibrary();
 			new PPatchManager(harmony).RegisterPatchClass(typeof(AirlockDoorPatches));
-			new PBuildingManager().Register(AirlockDoorConfig.CreateBuilding());
+			bm.Register(AirlockDoorConfig.CreateBuilding());
+			bm.Register(AirlockDoorInsulatedConfig.CreateBuilding());
 			new PLocalization().Register();
 			new PVersionCheck().Register(this, new SteamVersionChecker());
 		}
