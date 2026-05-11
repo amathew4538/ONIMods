@@ -20,6 +20,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using System;
 
 using SideScreenPair = System.Collections.Generic.KeyValuePair<DetailsScreen.SideScreenRef, int>;
 
@@ -147,7 +148,17 @@ namespace PeterHan.FastTrack.UIPatches {
 							dss.SetActive(true);
 						inst.SetTarget(target);
 						inst.Show();
-						sortedScreens.Add(new SideScreenPair(screen, inst.GetSideScreenSortOrder()));
+						// Check if the instance isnt null first
+						if (inst != null) {
+    						int order = 0;
+    						try {
+        						order = inst.GetSideScreenSortOrder();
+    						} catch (Exception) {
+        						// If it fails, give a default order instead of crashing the game
+        						order = 0;
+    						}
+    						sortedScreens.Add(new SideScreenPair(screen, order));
+						}
 						anyScreens = true;
 					} else if (inst != null && (instGO = inst.gameObject).activeSelf) {
 						instGO.SetActive(false);

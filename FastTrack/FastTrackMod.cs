@@ -207,7 +207,7 @@ namespace PeterHan.FastTrack {
 				var target = typeof(Global).GetMethodSafe(nameof(Global.TestDataLocations),
 					false);
 				if (target != null && typeof(Global).GetFieldSafe(
-						nameof(Global.saveFolderTestResult), true) != null) {
+                        "saveFolderTestResult", true) != null) {
 					harmony.Patch(target, prefix: new HarmonyMethod(typeof(FastTrackMod),
 						nameof(RemoveTestDataLocations)));
 #if DEBUG
