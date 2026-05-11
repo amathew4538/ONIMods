@@ -206,10 +206,9 @@ namespace PeterHan.FastTrack {
 				// This patch is Windows only apparently
 				var target = typeof(Global).GetMethodSafe(nameof(Global.TestDataLocations),
 					false);
-				if (target != null && typeof(Global).GetFieldSafe(
-                        "saveFolderTestResult", true) != null) {
-					harmony.Patch(target, prefix: new HarmonyMethod(typeof(FastTrackMod),
-						nameof(RemoveTestDataLocations)));
+				if (target != null && typeof(Global).GetFieldSafe("saveFolderTestResult", true) != null) {
+    				harmony.Patch(target, prefix: new HarmonyMethod(typeof(FastTrackMod),
+        				nameof(RemoveTestDataLocations)));
 #if DEBUG
 					PUtil.LogDebug("Patched Global.TestDataLocations");
 #endif
