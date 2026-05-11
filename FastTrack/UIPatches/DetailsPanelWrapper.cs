@@ -148,12 +148,14 @@ namespace PeterHan.FastTrack.UIPatches {
 							dss.SetActive(true);
 						inst.SetTarget(target);
 						inst.Show();
-						// Check if the instance isnt null first
+						// Check if the instance isn't null first
 						if (inst != null) {
     						int order = 0;
     						try {
         						order = inst.GetSideScreenSortOrder();
-    						} catch (Exception) {
+    						} catch (Exception e) {
+        						Debug.LogWarning("Failed to get side screen sort order for " +
+        							inst.GetType().FullName + "; using default sort order 0.\n" + e);
         						// If it fails, give a default order instead of crashing the game
         						order = 0;
     						}
