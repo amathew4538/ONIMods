@@ -258,3 +258,8 @@ paket-files/
 *.cmd
 /Assets/
 *.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
